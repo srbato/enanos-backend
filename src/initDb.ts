@@ -56,6 +56,7 @@ export function initDatabase(): Promise<void> {
         "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         "firstName" TEXT NOT NULL,
         "lastName" TEXT NOT NULL,
+        "age" INTEGER,
         "arrivalDate" DATETIME,
         "isWorking" BOOLEAN NOT NULL DEFAULT 0,
         "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -71,6 +72,7 @@ export function initDatabase(): Promise<void> {
           // Migracion simple para bases que solo tenian nombre y apellido.
           await addColumnIfNeeded(db, "arrivalDate", "DATETIME");
           await addColumnIfNeeded(db, "isWorking", "BOOLEAN NOT NULL DEFAULT 0");
+          await addColumnIfNeeded(db, "age", "INTEGER")
 
           // Prisma espera un DateTime completo. Normalizamos fechas antiguas.
           db.run(

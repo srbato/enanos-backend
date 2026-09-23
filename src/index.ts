@@ -57,11 +57,17 @@ app.get("/api/personas", async (_req, res) => {
 // POST /api/personas
 // Recibe una persona nueva y la guarda mediante Prisma.
 app.post("/api/personas", async (req, res) => {
-  const { firstName, lastName, arrivalDate, isWorking } = req.body;
+  const { firstName, lastName, age, arrivalDate, isWorking } = req.body;
 
   // Nombre y apellido son obligatorios para crear el registro.
   if (!String(firstName ?? '').trim() || !String(lastName ?? '').trim()) {
     return res.status(400).json({ error: "Faltan datos obligatorios" });
+  }
+
+  // La edad es opcional. Si llega vacia queda en null; si llega, tiene que ser un numero.
+  const parsedAge = age === undefined || age === null || age === '' ? null : Number(age);
+  if (parsedAge !== null && Number.isNaN(parsedAge)) {
+    return res.status(400).json({ error: "La edad no es valida" });
   }
 
   // Si no llega fecha, usamos la fecha actual del servidor.
@@ -74,6 +80,7 @@ app.post("/api/personas", async (req, res) => {
     data: {
       firstName: String(firstName).trim(),
       lastName: String(lastName).trim(),
+      age: parsedAge,
       arrivalDate: parsedArrivalDate,
       isWorking: Boolean(isWorking),
     },

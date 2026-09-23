@@ -20,6 +20,7 @@ model Person {
   id          Int      @id @default(autoincrement())
   firstName   String
   lastName    String
+  age         Int?
   arrivalDate DateTime?
   isWorking   Boolean  @default(false)
   createdAt   DateTime @default(now())
