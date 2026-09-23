@@ -134,6 +134,25 @@ app.patch("/api/personas/:id", async (req, res) => {
   res.json(person);
 });
 
+// DELETE /api/personas/:id
+// Elimina de la base la persona con ese id.
+app.delete("/api/personas/:id", async (req, res) => {
+  const id = parseId(req.params.id);
+  if (!id) {
+    return res.status(400).json({ error: "El id no es valido" });
+  }
+
+  try {
+    await prisma.person.delete({ where: { id } });
+
+    // 204 significa "salio bien, no hay nada para devolver".
+    res.status(204).send();
+  } catch {
+    // Prisma tira error si no existe una persona con ese id.
+    res.status(404).json({ error: "No existe una persona con ese id" });
+  }
+});
+
 // -----------------------------------------------------------------------------
 // 3. Arranque del servidor
 // -----------------------------------------------------------------------------
